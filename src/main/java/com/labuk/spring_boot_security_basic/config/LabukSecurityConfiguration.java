@@ -28,13 +28,13 @@ public class LabukSecurityConfiguration {
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.csrf().disable();
-        httpSecurity.authorizeRequests().anyRequest().fullyAuthenticated().and().httpBasic();
+        httpSecurity.authorizeRequests().requestMatchers("/api/v0/labuk/**").fullyAuthenticated().and().httpBasic();
         return  httpSecurity.build();
     }
-
-    @Bean
-    public static NoOpPasswordEncoder passwordEncoder(){
-        return (NoOpPasswordEncoder) NoOpPasswordEncoder.getInstance();
-    }
+//
+//    @Bean
+//    public static NoOpPasswordEncoder passwordEncoder(){
+//        return (NoOpPasswordEncoder) NoOpPasswordEncoder.getInstance();
+//    }
 
 }
