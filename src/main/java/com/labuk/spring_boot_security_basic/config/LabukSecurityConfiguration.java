@@ -15,21 +15,28 @@ import org.springframework.security.web.SecurityFilterChain;
 public class LabukSecurityConfiguration {
 
     @Bean
-    public UserDetailsService userDetailsService(){
+    public UserDetailsService userDetailsService() {
         UserDetails user = User.withDefaultPasswordEncoder()
                 .username("admin")
                 .password("admin123")
                 .roles("ADMIN")
                 .build();
 
-        return  new InMemoryUserDetailsManager(user);
+        UserDetails user1 = User.withDefaultPasswordEncoder()
+                .username("user")
+                .password("user123")
+                .roles("USER")
+                .build();
+
+        return new InMemoryUserDetailsManager(user, user1);
     }
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.csrf().disable();
-        httpSecurity.authorizeRequests().requestMatchers("/api/v0/labuk/**").fullyAuthenticated().and().httpBasic();
-        return  httpSecurity.build();
+        httpSecurity.authorizeRequests().requestMatchers("/api/v0/labuk/**").hasRole("ADMIN").anyRequest()
+                .fullyAuthenticated().and().httpBasic();
+        return httpSecurity.build();
     }
 //
 //    @Bean
