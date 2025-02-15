@@ -5,5 +5,8 @@ spring:
 #    user:
 #      name: Labuk-user
 #      password: pwd
-
+  h2:
+    console:
+      enabled: true
+#      path: /h2-console
 

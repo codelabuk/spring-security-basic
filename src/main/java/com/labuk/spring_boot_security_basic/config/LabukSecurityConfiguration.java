@@ -1,47 +1,38 @@
 package com.labuk.spring_boot_security_basic.config;
 
+import com.labuk.spring_boot_security_basic.service.CustomUserDetailService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 public class LabukSecurityConfiguration {
 
-    @Bean
-    public UserDetailsService userDetailsService() {
-        UserDetails user = User.withDefaultPasswordEncoder()
-                .username("admin")
-                .password("admin123")
-                .roles("ADMIN")
-                .build();
+    private final CustomUserDetailService customUserDetailService;
 
-        UserDetails user1 = User.withDefaultPasswordEncoder()
-                .username("user")
-                .password("user123")
-                .roles("USER")
-                .build();
-
-        return new InMemoryUserDetailsManager(user, user1);
+    public LabukSecurityConfiguration(CustomUserDetailService customUserDetailService) {
+        this.customUserDetailService = customUserDetailService;
     }
+
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.csrf().disable();
-        httpSecurity.authorizeRequests().requestMatchers("/api/v0/labuk/**").hasRole("ADMIN").anyRequest()
+        httpSecurity.authorizeRequests().requestMatchers("/api/v0/labuk/**")
                 .fullyAuthenticated().and().httpBasic();
         return httpSecurity.build();
     }
+
 //
 //    @Bean
-//    public static NoOpPasswordEncoder passwordEncoder(){
-//        return (NoOpPasswordEncoder) NoOpPasswordEncoder.getInstance();
+//    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+//        return httpSecurity.csrf().disable().userDetailsService(customUserDetailService)
+//                .authorizeHttpRequests((requests) -> requests
+//                        .requestMatchers("/login", "/css/**", "/js/**").permitAll()
+//                        .anyRequest().authenticated()
+//                )
+//                .build();
 //    }
 
 }
