@@ -19,25 +19,28 @@ import java.util.stream.Stream;
 @EnableWebSecurity
 public class SpringBootSecurityBasicApplication {
 
-	@Autowired
-	UserRepository userRespository;
+    @Autowired
+    UserRepository userRespository;
 
-	@PostConstruct
-	public void initUser(){
-		List<User> users = Stream.of(
-				new User(1, "labukAdmin", "admin1", "labuk.admin@labuk.com"),
-				new User(2, "userLabuk1", "user1", "user.labuk1@labuk.com")
-		).collect(Collectors.toList());
-		userRespository.saveAll(users);
-	}
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
-	public static void main(String[] args) {
-		SpringApplication.run(SpringBootSecurityBasicApplication.class, args);
-	}
+    @PostConstruct
+    public void initUser() {
+        List<User> users = Stream.of(
+                new User(1, "labukAdmin", passwordEncoder.encode("admin1"), "labuk.admin@labuk.com"),
+                new User(2, "userLabuk1", passwordEncoder.encode("user1"), "user.labuk1@labuk.com")
+        ).collect(Collectors.toList());
+        userRespository.saveAll(users);
+    }
+
+    public static void main(String[] args) {
+        SpringApplication.run(SpringBootSecurityBasicApplication.class, args);
+    }
 
 
     @Bean
-	PasswordEncoder passwordEncoder() {
+    PasswordEncoder passwordEncoder() {
         return NoOpPasswordEncoder.getInstance();
     }
 
