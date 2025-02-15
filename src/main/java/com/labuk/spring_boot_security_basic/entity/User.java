@@ -7,6 +7,10 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * Lambok plugin doesn't seems to work
+ * TODO  fix it
+ */
 @Data
 @Getter
 @Setter
